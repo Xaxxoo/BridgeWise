@@ -7,20 +7,15 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import {
-  ApiBody,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BridgeReliabilityService } from './bridge-reliability.service';
 import {
   BridgeReliabilityResponseDto,
   GetReliabilityDto,
   RecordBridgeEventDto,
   ReliabilityRankingFactorDto,
-} from './dto/reliability.dto';
-import { BridgeReliabilityMetric } from './entities/bridge-reliability-metric.entity';
+} from './reliability.dto';
+import { BridgeReliabilityMetric } from './bridge-reliability-metric.entity';
 
 @ApiTags('Bridge Reliability')
 @Controller('bridge-reliability')
@@ -66,7 +61,8 @@ export class BridgeReliabilityController {
   @Get('ranking-factors')
   @ApiOperation({
     summary: 'Get reliability ranking factors for a route',
-    description: 'Returns reliability-adjusted scores for all bridges on a route.',
+    description:
+      'Returns reliability-adjusted scores for all bridges on a route.',
   })
   async getRankingFactors(
     @Query('sourceChain') sourceChain: string,

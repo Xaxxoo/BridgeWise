@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { BridgeAdapter } from '../interfaces/bridge-adapter.interface';
+import { BridgeAdapter } from './bridge-adapter.interface';
 
 export const BRIDGE_ADAPTERS = 'BRIDGE_ADAPTERS';
 
@@ -10,7 +10,9 @@ export class BridgeRegistryService {
 
   register(adapter: BridgeAdapter): void {
     if (this.adapters.has(adapter.name)) {
-      this.logger.warn(`Adapter "${adapter.name}" is already registered. Overwriting.`);
+      this.logger.warn(
+        `Adapter "${adapter.name}" is already registered. Overwriting.`,
+      );
     }
     this.adapters.set(adapter.name, adapter);
     this.logger.log(`Registered bridge adapter: ${adapter.name}`);

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TransactionService } from '../transactions.service';
+import { TransactionsService } from '../transactions.service';
 import { Transaction, TransactionStatus } from '../entities/transaction.entity';
 
 export interface RetryPolicy {
@@ -24,13 +24,15 @@ export class TransactionRetryService {
     backoffStrategy: 'exponential',
   };
 
-  constructor(private readonly transactionService: TransactionService) {}
+  constructor(private readonly transactionService: TransactionsService) {}
 
   setPolicy(policy: Partial<RetryPolicy>) {
     this.retryPolicy = { ...this.retryPolicy, ...policy };
   }
 
-  async retryTransaction(transaction: Transaction): Promise<Transaction | null> {
+  async retryTransaction(
+    transaction: Transaction,
+  ): Promise<Transaction | null> {
     if (!this.isSafeToRetry(transaction)) return null;
     let attempt = 0;
     let lastError = '';
@@ -63,7 +65,11 @@ export class TransactionRetryService {
     );
   }
 
-  private logRetryAttempt(transactionId: string, attempt: number, error: string) {
+  private logRetryAttempt(
+    transactionId: string,
+    attempt: number,
+    error: string,
+  ) {
     this.retryLogs.push({
       transactionId,
       attempt,

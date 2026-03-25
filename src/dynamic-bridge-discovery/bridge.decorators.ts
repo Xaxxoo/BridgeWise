@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { BRIDGE_REGISTRY_TOKEN } from '../interfaces/bridge.tokens';
+import { BRIDGE_REGISTRY_TOKEN } from './bridge.tokens';
 
 /**
  * Injects the BridgeRegistry service.
@@ -18,7 +18,10 @@ export const BRIDGE_ADAPTER_METADATA = 'BRIDGE_ADAPTER_METADATA';
  * @BridgePlugin({ name: 'my-bridge', version: '1.0.0' })
  * export class MyBridgeAdapter implements BridgeAdapter { ... }
  */
-export const BridgePlugin = (meta: { name: string; version: string }): ClassDecorator => {
+export const BridgePlugin = (meta: {
+  name: string;
+  version: string;
+}): ClassDecorator => {
   return (target) => {
     Reflect.defineMetadata(BRIDGE_ADAPTER_METADATA, meta, target);
   };

@@ -1,5 +1,5 @@
-import { BridgeAdapter, BridgeCapability } from '../interfaces/bridge-adapter.interface';
-import { BridgePlugin } from '../decorators/bridge.decorators';
+import { BridgeAdapter, BridgeCapability } from './bridge-adapter.interface';
+import { BridgePlugin } from './bridge.decorators';
 
 @BridgePlugin({ name: 'http-bridge', version: '1.0.0' })
 export class HttpBridgeAdapter implements BridgeAdapter {
@@ -29,10 +29,18 @@ export class HttpBridgeAdapter implements BridgeAdapter {
     this.initialized = false;
   }
 
-  async execute<T = unknown, R = unknown>(operation: string, payload: T): Promise<R> {
+  async execute<T = unknown, R = unknown>(
+    operation: string,
+    payload: T,
+  ): Promise<R> {
     if (!this.initialized) throw new Error('HttpBridgeAdapter not initialized');
 
     // Simulated execution — replace with actual HTTP client logic
-    return { operation, payload, baseUrl: this.baseUrl, bridge: this.name } as unknown as R;
+    return {
+      operation,
+      payload,
+      baseUrl: this.baseUrl,
+      bridge: this.name,
+    } as unknown as R;
   }
 }

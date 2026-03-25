@@ -1,11 +1,17 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
-import { BridgeAdapter, BridgeAdapterConstructor } from '../interfaces/bridge-adapter.interface';
-import { BridgeModuleConfig } from '../interfaces/bridge-config.interface';
-import { BridgeInitializationException, BridgeLoadException } from '../exceptions/bridge.exceptions';
-import { BridgeRegistry } from '../registry/bridge.registry';
-import { BRIDGE_ADAPTER_METADATA } from '../decorators/bridge.decorators';
+import { BridgeRegistry } from './bridge.registry';
+import { BridgeModuleConfig } from './bridge-config.interface';
+import {
+  BridgeAdapter,
+  BridgeAdapterConstructor,
+} from './bridge-adapter.interface';
+import {
+  BridgeInitializationException,
+  BridgeLoadException,
+} from './bridge.exceptions';
+import { BRIDGE_ADAPTER_METADATA } from './bridge.decorators';
 
 @Injectable()
 export class BridgeLoader implements OnModuleInit {
@@ -37,15 +43,23 @@ export class BridgeLoader implements OnModuleInit {
       : path.join(process.cwd(), directory);
 
     if (!fs.existsSync(resolvedDir)) {
-      this.logger.warn(`Bridge directory not found: "${resolvedDir}". Skipping auto-discovery.`);
+      this.logger.warn(
+        `Bridge directory not found: "${resolvedDir}". Skipping auto-discovery.`,
+      );
       return;
     }
 
     const files = fs
       .readdirSync(resolvedDir)
-      .filter((f) => (f.endsWith('.adapter.ts') || f.endsWith('.adapter.js')) && !f.endsWith('.spec.ts'));
+      .filter(
+        (f) =>
+          (f.endsWith('.adapter.ts') || f.endsWith('.adapter.js')) &&
+          !f.endsWith('.spec.ts'),
+      );
 
-    this.logger.log(`Discovered ${files.length} bridge file(s) in "${resolvedDir}"`);
+    this.logger.log(
+      `Discovered ${files.length} bridge file(s) in "${resolvedDir}"`,
+    );
 
     for (const file of files) {
       const filePath = path.join(resolvedDir, file);
@@ -58,21 +72,20 @@ export class BridgeLoader implements OnModuleInit {
    */
   async loadAdapterFromFile(filePath: string): Promise<BridgeAdapter | null> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const mod = require(filePath);
+      const mod = await import(filePath);
       const AdapterClass = this.extractAdapterClass(mod);
 
       if (!AdapterClass) {
-        this.logger.warn(`No valid BridgeAdapter export found in "${filePath}". Skipping.`);
+        this.logger.warn(
+          `No valid BridgeAdapter export found in "${filePath}". Skipping.`,
+        );
         return null;
       }
 
-      const adapterConfig = this.config.globalConfig ?? {};
-      const instance: BridgeAdapter = new AdapterClass(adapterConfig);
-
-      await this.initializeAdapter(instance);
-      this.registry.register(instance, { source: filePath });
-
+      const instance = await this.createAndRegisterAdapter(
+        AdapterClass,
+        filePath,
+      );
       return instance;
     } catch (err) {
       throw new BridgeLoadException(filePath, err as Error);
@@ -82,7 +95,9 @@ export class BridgeLoader implements OnModuleInit {
   /**
    * Load bridges defined in the configuration object.
    */
-  async loadFromConfig(bridgesConfig: BridgeModuleConfig['bridges']): Promise<void> {
+  async loadFromConfig(
+    bridgesConfig: BridgeModuleConfig['bridges'],
+  ): Promise<void> {
     if (!bridgesConfig) return;
 
     for (const [name, adapterConfig] of Object.entries(bridgesConfig)) {
@@ -101,20 +116,22 @@ export class BridgeLoader implements OnModuleInit {
         : path.join(process.cwd(), adapterConfig.modulePath);
 
       try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const mod = require(resolvedPath);
+        const mod = await import(resolvedPath);
         const AdapterClass = this.extractAdapterClass(mod);
 
         if (!AdapterClass) {
-          this.logger.warn(`No valid BridgeAdapter export found for "${name}". Skipping.`);
+          this.logger.warn(
+            `No valid BridgeAdapter export found for "${name}". Skipping.`,
+          );
           continue;
         }
 
-        const mergedConfig = { ...(this.config.globalConfig ?? {}), ...(adapterConfig.options ?? {}) };
-        const instance: BridgeAdapter = new AdapterClass(mergedConfig);
-
-        await this.initializeAdapter(instance);
-        this.registry.register(instance, { source: resolvedPath, configKey: name });
+        await this.createAndRegisterAdapter(
+          AdapterClass,
+          resolvedPath,
+          adapterConfig.options ?? {},
+          name,
+        );
       } catch (err) {
         throw new BridgeLoadException(resolvedPath, err as Error);
       }
@@ -124,14 +141,46 @@ export class BridgeLoader implements OnModuleInit {
   /**
    * Programmatically register a pre-instantiated adapter at runtime.
    */
-  async registerAdapter(adapter: BridgeAdapter, options?: Record<string, unknown>): Promise<void> {
+  async registerAdapter(
+    adapter: BridgeAdapter,
+    options?: Record<string, unknown>,
+  ): Promise<void> {
     await this.initializeAdapter(adapter);
-    this.registry.register(adapter, { ...options, source: 'runtime-injection' });
+    this.registry.register(adapter, {
+      ...options,
+      source: 'runtime-injection',
+    });
   }
 
   // ─── Private helpers ────────────────────────────────────────────────────────
 
-  private extractAdapterClass(mod: Record<string, unknown>): BridgeAdapterConstructor | null {
+  private resolvePath(filePath: string): string {
+    return path.isAbsolute(filePath)
+      ? filePath
+      : path.join(process.cwd(), filePath);
+  }
+
+  private async createAndRegisterAdapter(
+    AdapterClass: BridgeAdapterConstructor,
+    source: string,
+    extraConfig: Record<string, unknown> = {},
+    configKey?: string,
+  ): Promise<BridgeAdapter> {
+    const mergedConfig = {
+      ...(this.config.globalConfig ?? {}),
+      ...extraConfig,
+    };
+    const instance: BridgeAdapter = new AdapterClass(mergedConfig);
+
+    await this.initializeAdapter(instance);
+    this.registry.register(instance, { source, configKey });
+
+    return instance;
+  }
+
+  private extractAdapterClass(
+    mod: Record<string, unknown>,
+  ): BridgeAdapterConstructor | null {
     // Check default export
     if (mod.default && this.isAdapterClass(mod.default)) {
       return mod.default as BridgeAdapterConstructor;

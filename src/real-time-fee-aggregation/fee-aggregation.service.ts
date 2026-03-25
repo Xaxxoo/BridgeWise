@@ -5,8 +5,8 @@ import {
   BridgeAdapter,
   NormalizedQuote,
   QuoteRequest,
-} from '../interfaces/bridge-adapter.interface';
-import { CompareQuotesResponseDto } from '../dto/get-quotes.dto';
+} from './bridge-adapter.interface';
+import { CompareQuotesResponseDto } from './get-quotes.dto';
 
 export const QUOTE_TIMEOUT_MS = 10_000;
 
@@ -77,7 +77,9 @@ export class FeeAggregationService {
     request: QuoteRequest,
   ): Promise<NormalizedQuote> {
     // Check route support before querying
-    if (!adapter.supportsRoute(request.fromChain, request.toChain, request.token)) {
+    if (
+      !adapter.supportsRoute(request.fromChain, request.toChain, request.token)
+    ) {
       return {
         bridgeName: adapter.name,
         totalFeeUSD: 0,
@@ -98,7 +100,12 @@ export class FeeAggregationService {
   private timeoutReject(adapterName: string): Promise<never> {
     return new Promise((_, reject) =>
       setTimeout(
-        () => reject(new Error(`Timeout fetching quote from "${adapterName}" after ${QUOTE_TIMEOUT_MS}ms`)),
+        () =>
+          reject(
+            new Error(
+              `Timeout fetching quote from "${adapterName}" after ${QUOTE_TIMEOUT_MS}ms`,
+            ),
+          ),
         QUOTE_TIMEOUT_MS,
       ),
     );

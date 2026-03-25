@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { RELIABILITY_CONSTANTS, RELIABILITY_BADGE_LABELS } from '../constants/reliability.constants';
-import { ReliabilityTier } from '../enums/reliability.enum';
-import { ReliabilityBadgeDto } from '../dto/reliability.dto';
+import {
+  RELIABILITY_BADGE_LABELS,
+  RELIABILITY_CONSTANTS,
+} from './reliability.constants';
+import { ReliabilityTier } from './reliability.enum';
+import { ReliabilityBadgeDto } from './reliability.dto';
 
 export interface RawCounts {
   totalAttempts: number;
@@ -43,7 +46,10 @@ export class ReliabilityCalculatorService {
 
     const rawScore = percent - timeoutPenalty;
     return parseFloat(
-      Math.max(RELIABILITY_CONSTANTS.MIN_SCORE, Math.min(RELIABILITY_CONSTANTS.MAX_SCORE, rawScore)).toFixed(2),
+      Math.max(
+        RELIABILITY_CONSTANTS.MIN_SCORE,
+        Math.min(RELIABILITY_CONSTANTS.MAX_SCORE, rawScore),
+      ).toFixed(2),
     );
   }
 
@@ -95,7 +101,7 @@ export class ReliabilityCalculatorService {
    */
   computeRankingPenalty(
     reliabilityScore: number,
-    threshold = RELIABILITY_CONSTANTS.MEDIUM_THRESHOLD,
+    threshold: number = RELIABILITY_CONSTANTS.MEDIUM_THRESHOLD,
   ): number {
     if (reliabilityScore < threshold) {
       return RELIABILITY_CONSTANTS.PENALTY_BELOW_THRESHOLD;
@@ -111,8 +117,8 @@ export class ReliabilityCalculatorService {
     baseRankingScore: number,
     reliabilityScore: number,
     options: {
-      weight?: number;          // 0-1, how much reliability influences ranking
-      threshold?: number;       // penalize below this %
+      weight?: number; // 0-1, how much reliability influences ranking
+      threshold?: number; // penalize below this %
       ignoreReliability?: boolean;
     } = {},
   ): number {
@@ -128,7 +134,9 @@ export class ReliabilityCalculatorService {
     const baseContribution = baseRankingScore * (1 - weight);
 
     return parseFloat(
-      Math.max(0, baseContribution + reliabilityContribution - penalty).toFixed(2),
+      Math.max(0, baseContribution + reliabilityContribution - penalty).toFixed(
+        2,
+      ),
     );
   }
 }
