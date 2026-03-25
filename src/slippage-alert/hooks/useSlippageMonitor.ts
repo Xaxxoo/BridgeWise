@@ -1,5 +1,9 @@
 import { useEffect, useRef } from 'react';
-import { BridgeQuote, SlippageAlert, SlippageAlertConfig } from '../types/slippage-alert.types';
+import {
+  BridgeQuote,
+  SlippageAlert,
+  SlippageAlertConfig,
+} from '../types/slippage-alert.types';
 import { useSlippageAlert } from './useSlippageAlert';
 
 interface UseSlippageMonitorOptions {

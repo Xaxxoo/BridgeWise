@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { BridgeAdapter, NormalizedQuote, QuoteRequest } from '../interfaces/bridge-adapter.interface';
+import {
+  BridgeAdapter,
+  NormalizedQuote,
+  QuoteRequest,
+} from '../interfaces/bridge-adapter.interface';
 
 /**
  * Across Protocol Adapter

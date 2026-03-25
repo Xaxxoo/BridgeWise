@@ -3,7 +3,11 @@ import { BridgeRegistryService } from './services/bridge-registry.service';
 import { FeeAggregationService } from './services/fee-aggregation.service';
 import { QuoteScoringService } from './services/quote-scoring.service';
 import { QuotesController } from './quotes.controller';
-import { AcrossAdapter, HopAdapter, StargateAdapter } from './adapters/bridge.adapters';
+import {
+  AcrossAdapter,
+  HopAdapter,
+  StargateAdapter,
+} from './adapters/bridge.adapters';
 
 @Module({
   controllers: [QuotesController],

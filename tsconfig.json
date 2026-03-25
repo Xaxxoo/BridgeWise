@@ -28,7 +28,8 @@
   },
   "include": [
     "src/**/*",
-    "libs/bridge-core/src/**/*"
+    "libs/bridge-core/src/**/*",
+    "libs/bridge-core/*.ts"
   ],
   "exclude": [
     "apps",

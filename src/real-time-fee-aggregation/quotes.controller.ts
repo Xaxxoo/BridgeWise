@@ -7,12 +7,7 @@ import {
   BadRequestException,
   Logger,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiQuery,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { FeeAggregationService } from './services/fee-aggregation.service';
 import { GetQuotesDto, CompareQuotesResponseDto } from './dto/get-quotes.dto';
 import { plainToInstance } from 'class-transformer';
@@ -48,12 +43,16 @@ export class QuotesController {
     type: CompareQuotesResponseDto,
   })
   @ApiResponse({ status: 400, description: 'Invalid query parameters' })
-  async compareQuotes(@Query() query: Record<string, string>): Promise<CompareQuotesResponseDto> {
+  async compareQuotes(
+    @Query() query: Record<string, string>,
+  ): Promise<CompareQuotesResponseDto> {
     const dto = plainToInstance(GetQuotesDto, query);
     const errors = await validate(dto);
 
     if (errors.length > 0) {
-      const messages = errors.flatMap((e) => Object.values(e.constraints ?? {}));
+      const messages = errors.flatMap((e) =>
+        Object.values(e.constraints ?? {}),
+      );
       throw new BadRequestException(messages);
     }
 
