@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
 export interface SlippageRoute {
   inputAmount: string;
@@ -22,12 +22,12 @@ export function useSlippage(
   route: SlippageRoute | null | undefined,
   transferAmount: string,
   warningThreshold: number = SLIPPAGE_WARNING_THRESHOLD,
-  lowLiquidityThreshold: number = LOW_LIQUIDITY_THRESHOLD_USD
+  lowLiquidityThreshold: number = LOW_LIQUIDITY_THRESHOLD_USD,
 ): SlippageResult {
   return useMemo(() => {
     const defaultResult: SlippageResult = {
       slippagePercent: 0,
-      minimumReceived: "0",
+      minimumReceived: '0',
       isHighSlippage: false,
       isLowLiquidity: false,
       hasWarning: false,

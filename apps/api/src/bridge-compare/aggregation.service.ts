@@ -3,8 +3,13 @@ import {
   RawBridgeQuote,
   BridgeProvider,
   QuoteRequestParams,
+<<<<<<< HEAD:src/bridge-compare/aggregation.service.ts
+} from '../interfaces';
+import { BridgeStatus } from '../enums';
+=======
 } from './interfaces';
 import { BridgeStatus } from './enums';
+>>>>>>> 902330b94c4294029cf45eb84c6121443fbb0427:apps/api/src/bridge-compare/aggregation.service.ts
 
 interface MockQuoteTemplate {
   feesUsd: number;

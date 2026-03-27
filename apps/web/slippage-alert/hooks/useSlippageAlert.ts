@@ -9,7 +9,7 @@ import {
 } from '../types/slippage-alert.types';
 
 const DEFAULT_MAX_SLIPPAGE = 1; // 1%
-const CRITICAL_MULTIPLIER = 2;  // 2x threshold = critical
+const CRITICAL_MULTIPLIER = 2; // 2x threshold = critical
 
 function generateId(): string {
   return `slippage-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -42,7 +42,10 @@ export function useSlippageAlert(
     (quote: BridgeQuote): SlippageAlert | null => {
       if (quote.slippagePercent <= maxSlippagePercent) return null;
 
-      const severity = resolveSeverity(quote.slippagePercent, maxSlippagePercent);
+      const severity = resolveSeverity(
+        quote.slippagePercent,
+        maxSlippagePercent,
+      );
 
       const data: SlippageAlertData = {
         bridge: quote.bridge,

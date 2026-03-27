@@ -551,11 +551,13 @@ export class PerformanceMetricService {
         break;
       case 'weekly': {
         // Start of week (Sunday)
-        const dayOfWeek = start.getDay();
-        start.setDate(start.getDate() - dayOfWeek);
-        start.setHours(0, 0, 0, 0);
-        end.setTime(start.getTime());
-        end.setDate(end.getDate() + 7);
+        {
+          const dayOfWeek = start.getDay();
+          start.setDate(start.getDate() - dayOfWeek);
+          start.setHours(0, 0, 0, 0);
+          end.setTime(start.getTime());
+          end.setDate(end.getDate() + 7);
+        }
         break;
       }
       case 'monthly':

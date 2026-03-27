@@ -137,9 +137,7 @@ export function useBridgeAnalytics(
       }
 
       setError(
-        err instanceof Error
-          ? err
-          : new Error('An unknown error occurred'),
+        err instanceof Error ? err : new Error('An unknown error occurred'),
       );
     } finally {
       setLoading(false);
@@ -281,9 +279,7 @@ export function useTimeSeriesAnalytics(
       }
 
       setError(
-        err instanceof Error
-          ? err
-          : new Error('An unknown error occurred'),
+        err instanceof Error ? err : new Error('An unknown error occurred'),
       );
     } finally {
       setLoading(false);
@@ -317,9 +313,7 @@ export function useTimeSeriesAnalytics(
  * const { data, loading, error } = useTopPerformingBridges({ limit: 5 });
  * ```
  */
-export function useTopPerformingBridges(options?: {
-  limit?: number;
-}): {
+export function useTopPerformingBridges(options?: { limit?: number }): {
   data: TopPerformingRoutes | null;
   loading: boolean;
   error: Error | null;
@@ -363,9 +357,7 @@ export function useTopPerformingBridges(options?: {
       setData(result);
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err
-          : new Error('An unknown error occurred'),
+        err instanceof Error ? err : new Error('An unknown error occurred'),
       );
     } finally {
       setLoading(false);
@@ -449,14 +441,17 @@ export function useSlippageStatistics(options: {
       setData(result.message ? null : result);
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err
-          : new Error('An unknown error occurred'),
+        err instanceof Error ? err : new Error('An unknown error occurred'),
       );
     } finally {
       setLoading(false);
     }
-  }, [options.bridgeName, options.sourceChain, options.destinationChain, options.token]);
+  }, [
+    options.bridgeName,
+    options.sourceChain,
+    options.destinationChain,
+    options.token,
+  ]);
 
   const refetch = useCallback(async () => {
     await fetchSlippageStats();

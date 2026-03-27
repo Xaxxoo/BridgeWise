@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 interface UseSlippageAlertProps {
   token: string;
@@ -28,12 +28,12 @@ export const useSlippageAlert = ({
       try {
         // Simulate API call to fetch slippage data
         const response = await fetch(
-          `/api/slippage?token=${token}&sourceChain=${sourceChain}&destinationChain=${destinationChain}`
+          `/api/slippage?token=${token}&sourceChain=${sourceChain}&destinationChain=${destinationChain}`,
         );
         const data = await response.json();
         setSlippage(data.slippage);
       } catch (error) {
-        setErrors((prev) => [...prev, "Failed to fetch slippage data"]);
+        setErrors((prev) => [...prev, 'Failed to fetch slippage data']);
       }
     };
 

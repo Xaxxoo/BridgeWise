@@ -1,6 +1,10 @@
-import { useMemo } from "react";
-import { rankBridges } from "@/lib/ranking";
-import type { BridgeRouteInput, RankedBridgeRoute, RankingWeights } from "@/lib/ranking";
+import { useMemo } from 'react';
+import { rankBridges } from '@/lib/ranking';
+import type {
+  BridgeRouteInput,
+  RankedBridgeRoute,
+  RankingWeights,
+} from '@/lib/ranking';
 
 interface UseBridgeRankingResult {
   rankedRoutes: RankedBridgeRoute[];
@@ -16,7 +20,7 @@ interface UseBridgeRankingResult {
  */
 export function useBridgeRanking(
   routes: BridgeRouteInput[] | null | undefined,
-  weights?: RankingWeights
+  weights?: RankingWeights,
 ): UseBridgeRankingResult {
   return useMemo(() => {
     if (!routes || routes.length === 0) {

@@ -25,6 +25,14 @@
       "@bridgewise/ui-components/*": ["packages/ui/src/*"]
     }
   },
+<<<<<<< HEAD
+  "include": [
+    "src/**/*",
+    "libs/bridge-core/src/**/*",
+    "libs/bridge-core/*.ts"
+  ],
+=======
+>>>>>>> 902330b94c4294029cf45eb84c6121443fbb0427
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
