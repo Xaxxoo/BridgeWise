@@ -1,4 +1,5 @@
 import React from 'react';
+import { ConfidenceScore, ConfidenceLevel } from './bridge/ConfidenceScore';
 
 // Define quote interface since the import is not available
 interface QuoteFees {
@@ -17,6 +18,8 @@ interface NormalizedQuote {
   sourceChain?: string;
   destinationChain?: string;
   fees?: QuoteFees;
+  confidenceScore?: number;
+  confidenceLevel?: ConfidenceLevel;
 }
 
 interface QuoteCardProps {
@@ -112,6 +115,16 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
           </span>
         </div>
       </div>
+
+      {/* Confidence Score */}
+      {quote.confidenceScore !== undefined && quote.confidenceLevel && (
+        <div className="border-t border-gray-100 pt-3 mt-3">
+          <ConfidenceScore
+            score={quote.confidenceScore}
+            level={quote.confidenceLevel}
+          />
+        </div>
+      )}
 
       {/* Action Button */}
       <div className="mt-4">

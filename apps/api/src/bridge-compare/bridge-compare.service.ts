@@ -144,6 +144,8 @@ export class BridgeCompareService {
       slippagePercent: slippage?.expectedSlippage ?? 0,
       reliabilityScore,
       compositeScore: 0, // assigned by RankingService
+      confidenceScore: 0, // assigned by RankingService
+      confidenceLevel: 'low' as const, // assigned by RankingService
       rankingPosition: 0, // assigned by RankingService
       bridgeStatus,
       metadata: {

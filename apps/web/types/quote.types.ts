@@ -25,6 +25,8 @@ export interface NormalizedQuote {
   };
   route: string[];
   reliability: number; // 0-100
+  confidenceScore: number; // 0-100, derived from fees + slippage + success rate
+  confidenceLevel: 'high' | 'medium' | 'low';
   timestamp: number;
   expiresAt: number;
 }
