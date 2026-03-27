@@ -6,6 +6,7 @@ import { SlippageService } from './slippage.service';
 import { ReliabilityService } from './reliability.service';
 import { RankingService } from './ranking.service';
 import { FailureRiskService } from './failure-risk.service';
+import { QuoteCacheService } from './quote-cache.service';
 
 @Module({
   controllers: [BridgeCompareController],
@@ -16,6 +17,7 @@ import { FailureRiskService } from './failure-risk.service';
     ReliabilityService,
     RankingService,
     FailureRiskService,
+    QuoteCacheService,
   ],
   exports: [BridgeCompareService],
 })

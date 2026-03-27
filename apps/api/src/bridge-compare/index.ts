@@ -81,6 +81,8 @@ export interface QuoteResponse {
   totalProviders: number;
   successfulProviders: number;
   fetchDurationMs: number;
+  cacheHit: boolean;
+  cachedAt?: Date;
 }
 
 export interface BridgeProvider {

@@ -4,6 +4,7 @@ import { SlippageService } from './slippage.service';
 import { ReliabilityService } from './reliability.service';
 import { RankingService } from './ranking.service';
 import { FailureRiskService } from './failure-risk.service';
+import { QuoteCacheService } from './quote-cache.service';
 import { GetQuotesDto } from './dto';
 import {
   NormalizedQuote,
@@ -23,6 +24,7 @@ export class BridgeCompareService {
     private readonly reliabilityService: ReliabilityService,
     private readonly rankingService: RankingService,
     private readonly failureRiskService: FailureRiskService,
+    private readonly quoteCacheService: QuoteCacheService,
   ) {}
 
   /**
@@ -44,6 +46,13 @@ export class BridgeCompareService {
       `Getting quotes: ${dto.sourceToken} ${dto.sourceChain}→${dto.destinationChain} ` +
         `amount=${dto.amount} mode=${params.rankingMode}`,
     );
+
+    const cacheKey = this.quoteCacheService.buildKey(params);
+    const cached = this.quoteCacheService.get(cacheKey);
+    if (cached) {
+      this.logger.log(`Returning cached quotes for key: ${cacheKey}`);
+      return cached;
+    }
 
     const { quotes: rawQuotes, failedProviders } =
       await this.aggregationService.fetchRawQuotes(params);
@@ -84,7 +93,10 @@ export class BridgeCompareService {
       totalProviders: rawQuotes.length + failedProviders,
       successfulProviders: rawQuotes.length,
       fetchDurationMs: Date.now() - startTime,
+      cacheHit: false,
     };
+
+    this.quoteCacheService.set(cacheKey, { ...response, cacheHit: true, cachedAt: new Date() });
 
     this.logger.log(
       `Returned ${rankedQuotes.length} quotes in ${response.fetchDurationMs}ms. ` +
