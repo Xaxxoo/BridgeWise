@@ -1,7 +1,17 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider, ThemeScript, TransactionProvider } from "@bridgewise/ui-components";
+import { BridgeWiseProvider, ThemeScript, TransactionProvider } from "@bridgewise/ui-components";
 import "./globals.css";
+
+const customTheme = {
+  primaryColor: "#22c55e",
+  secondaryColor: "#0f172a",
+  backgroundColor: "#020617",
+  textColor: "#e5e7eb",
+  borderRadius: "16px",
+  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  spacingUnit: "0.9rem",
+};
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,11 +41,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider defaultMode="system">
+        <BridgeWiseProvider theme={customTheme} defaultMode="system">
           <TransactionProvider>
             {children}
           </TransactionProvider>
-        </ThemeProvider>
+        </BridgeWiseProvider>
       </body>
     </html>
   );
