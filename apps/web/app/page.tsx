@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect } from 'react';
@@ -19,7 +18,11 @@ function TransactionDemo() {
 
     const interval = setInterval(() => {
       if (state.progress >= 100) {
-        updateState({ status: 'success', progress: 100, step: 'Transfer Complete!' });
+        updateState({
+          status: 'success',
+          progress: 100,
+          step: 'Transfer Complete!',
+        });
         clearInterval(interval);
         return;
       }
@@ -27,8 +30,10 @@ function TransactionDemo() {
       let nextProgress = state.progress + 5;
       let nextStep = state.step;
 
-      if (nextProgress > 20 && nextProgress < 40) nextStep = 'Confirming on source chain...';
-      if (nextProgress > 50 && nextProgress < 70) nextStep = 'Bridging assets...';
+      if (nextProgress > 20 && nextProgress < 40)
+        nextStep = 'Confirming on source chain...';
+      if (nextProgress > 50 && nextProgress < 70)
+        nextStep = 'Bridging assets...';
       if (nextProgress > 80) nextStep = 'Finalizing on destination...';
 
       updateState({ progress: Math.min(nextProgress, 100), step: nextStep });
@@ -45,8 +50,9 @@ function TransactionDemo() {
         </h1>
 
         <p className="max-w-xl text-center text-zinc-600 dark:text-zinc-400">
-          This page demonstrates the BridgeWise theme system. The heartbeat and status components
-          are styled via CSS variables injected by <code>BridgeWiseProvider</code>.
+          This page demonstrates the BridgeWise theme system. The heartbeat and
+          status components are styled via CSS variables injected by{' '}
+          <code>BridgeWiseProvider</code>.
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-4">
@@ -76,10 +82,13 @@ function TransactionDemo() {
               Inline BridgeStatus
             </h2>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
-              An inline status card using the same theme variables as the floating heartbeat.
+              An inline status card using the same theme variables as the
+              floating heartbeat.
             </p>
             <BridgeStatus
-              txHash={state.txHash || '0x0000000000000000000000000000000000000000'}
+              txHash={
+                state.txHash || '0x0000000000000000000000000000000000000000'
+              }
               bridgeName="demo"
               sourceChain="ethereum"
               destinationChain="polygon"
@@ -96,11 +105,12 @@ function TransactionDemo() {
               Component-level Overrides
             </h2>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
-              The floating heartbeat below uses a custom <code>className</code> to adjust its
-              position while still inheriting all theme variables.
+              The floating heartbeat below uses a custom <code>className</code>{' '}
+              to adjust its position while still inheriting all theme variables.
             </p>
             <p className="text-xs text-zinc-500 dark:text-zinc-500">
-              Trigger a transaction and you&apos;ll see the heartbeat appear in the bottom-left corner.
+              Trigger a transaction and you&apos;ll see the heartbeat appear in
+              the bottom-left corner.
             </p>
           </div>
         </section>
